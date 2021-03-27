@@ -248,6 +248,10 @@ _flag Tree::Delete(CString data)
 _flag Tree::Clear()
 {
 	tree.RemoveAll();
+	sort1 = -1;
+	sort2 = -1;
+	max = FALSE;
+	min = FALSE;
 	init();
 	return SUCCESS;
 }
@@ -375,14 +379,13 @@ commands Tree::getData()
 	}
 	if (max)
 		a.max = true;
-	if (min)
+	else if (min)
 		a.min = true;
 	
 	return a;
 }
 void Tree::changeData(commands com)
 {
-
 	tree.RemoveAll();
 	size = 0;
 	for (int i = 0; i < com.size; i++)
@@ -396,6 +399,6 @@ void Tree::changeData(commands com)
 	max = min = false;
 	if (com.max)
 		max = true;
-	if (com.min)
+	else if (com.min)
 		min = true;
 }

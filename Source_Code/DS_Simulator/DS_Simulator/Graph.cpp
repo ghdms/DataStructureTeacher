@@ -1,3 +1,4 @@
+//vertex와 edge 개념이 반대로 되어있음.
 #pragma once
 #include "stdafx.h"
 #include "Graph.h"
@@ -21,41 +22,39 @@ _flag Graph::Insert(CString data)
 
 _flag Graph::Delete(CString data)
 { 
-	if (!IsEmpty())
-	{
-		for (int i = 0; i < GetSize(); i++)
-		{
-			if (data == graph[i])
-			{
-				graph.RemoveAt(i);
-				for (int j = 0; j < vGetSize(); j++) 
-				{
-					if (i == vertex[j].x || i == vertex[j].y) //삭제한 엣지에 연결된 벌텍스 있으면 같이 삭제
-					{
-						vertex.RemoveAt(j);
-						j--;
-					}
-					else // 인덱스 앞으로 당기기
-					{
-						if (i < vertex[j].x)
-						{
-							vertex[j].x--;
-						}
-						if (i < vertex[j].y)
-						{
-							vertex[j].y--;
-						}
-					}
-				}
-				return SUCCESS;
-			}
-		}
-		return NOTARGET;
-	}
-	else
+	if (IsEmpty())
 	{
 		return EMPTY;
 	}
+
+	for (int i = 0; i < GetSize(); i++)
+	{
+		if (data == graph[i])
+		{
+			graph.RemoveAt(i);
+			for (int j = 0; j < vGetSize(); j++) 
+			{
+				if (i == vertex[j].x || i == vertex[j].y) //삭제한 엣지에 연결된 벌텍스 있으면 같이 삭제
+				{
+					vertex.RemoveAt(j);
+					j--;
+				}
+				else // 인덱스 앞으로 당기기
+				{
+					if (i < vertex[j].x)
+					{
+						vertex[j].x--;
+					}
+					if (i < vertex[j].y)
+					{
+						vertex[j].y--;
+					}
+				}
+			}
+			return SUCCESS;
+		}
+	}
+	return NOTARGET;
 }
 
 _flag Graph::Clear()
@@ -67,6 +66,11 @@ _flag Graph::Clear()
 
 _flag Graph::Add_Vertex(int start, int end)
 {
+	if (GetSize() < 2)
+	{
+		return INVALID;
+	}
+
 	CPoint temp;
 	temp.x = start;
 	temp.y = end;
@@ -90,6 +94,15 @@ _flag Graph::Add_Vertex(int start, int end)
 
 _flag Graph::Delete_Vertex(int start, int end)
 {
+	if (IsEmpty())
+	{
+		return EMPTY;
+	}
+	if (vGetSize() == 0)
+	{
+		return EMPTY;
+	}
+
 	CPoint temp;
 	temp.x = start;
 	temp.y = end;

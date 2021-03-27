@@ -118,10 +118,10 @@ void DSView::makeButton()
 
 		showbutton(&button_undo);
 		showbutton(&button_clear);
-		showbutton(&button_fun2, CString("Delete Vertex"));
-		showbutton(&button_fun1, CString("Add Vertex"));
-		showbutton(&button_delete, CString("Delete Edge"));
-		showbutton(&button_insert, CString("Add Edge"));
+		showbutton(&button_fun2, CString("Delete Edge"));
+		showbutton(&button_fun1, CString("Add Edge"));
+		showbutton(&button_delete, CString("Delete Vertex"));
+		showbutton(&button_insert, CString("Add Vertex"));
 		break;
 	}
 }
@@ -449,7 +449,7 @@ void DSView::OnBnClickedCancel()
 		return;
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	
-
+	prev.RemoveAll();
 	CDialogEx::OnCancel();
 }
 
@@ -581,7 +581,7 @@ void DSView::OnBnClickedUndo()
 	}
 	else
 	{
-		AfxMessageBox((LPCTSTR)("되돌리기가 불가능합니다."));
+		AfxMessageBox(CString("자료구조가 비어있습니다."));
 	}
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -614,7 +614,6 @@ void DSView::OnBnClickedFunction1()
 	if (isRunning)
 		return;
 	prev.AddTail(data->getData());
-	DS_Input2 input;
 	if (DS == TREE)
 	{
 		isRunning = true;
@@ -629,6 +628,20 @@ void DSView::OnBnClickedFunction1()
 	}
 	else
 	{
+		if (data->GetSize() < 2)
+		{
+			AfxMessageBox(CString("잘못된 입력입니다."));
+			prev.RemoveTail();
+			return;
+		}
+		if (dynamic_cast<Graph*>(data)->vGetSize() == (data->GetSize() * (data->GetSize() - 1)) / 2)
+		{
+			AfxMessageBox(CString("자료구조가 가득 찼습니다."));
+			prev.RemoveTail();
+			return;
+		}
+
+		DS_Input2 input;
 		if (input.DoModal() == IDOK)
 		{
 			if (input.input == "" || input.input2 == "")
@@ -680,7 +693,13 @@ void DSView::OnBnClickedFunction2()
 	}
 	else
 	{
-		DS_Input2 input;
+		if (data->IsEmpty())
+		{
+			AfxMessageBox(CString("자료구조가 비어있습니다."));
+			prev.RemoveTail();
+			return;
+		}
+
 		if (dynamic_cast<Graph*>(data)->vGetSize() == 0)
 		{
 			AfxMessageBox(CString("자료구조가 비어있습니다."));
@@ -688,22 +707,23 @@ void DSView::OnBnClickedFunction2()
 		}
 		else
 		{
-		if (input.DoModal() == IDOK)
-		{
-			int put = _tstoi(input.input);
-			int put2 = _tstoi(input.input2);
-			_flag mes = dynamic_cast<Graph*>(data)->Delete_Vertex(put, put2);
-
-			if (mes == NOTARGET)
+			DS_Input2 input;
+			if (input.DoModal() == IDOK)
 			{
-				AfxMessageBox(CString("대상이 존재하지 않습니다."));
-				prev.RemoveTail();
+				int put = _tstoi(input.input);
+				int put2 = _tstoi(input.input2);
+				_flag mes = dynamic_cast<Graph*>(data)->Delete_Vertex(put, put2);
+
+				if (mes == NOTARGET)
+				{
+					AfxMessageBox(CString("대상이 존재하지 않습니다."));
+					prev.RemoveTail();
+				}
+				showPictrl();
+				CRect rrrr(0, 0, 790, 700);
+				InvalidateRect(rrrr);
 			}
-			showPictrl();
-			CRect rrrr(0, 0, 790, 700);
-			InvalidateRect(rrrr);
 		}
-	}
 	}
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
