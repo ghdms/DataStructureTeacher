@@ -122,26 +122,12 @@ _flag Graph::Delete_Vertex(int start, int end)
 
 BOOL Graph::IsEmpty()
 { 
-	if (GetSize())
-	{
-		return FALSE;
-	}
-	else
-	{
-		return TRUE;
-	}
+	return GetSize() == 0;
 }
 
 BOOL Graph::IsFull() 
 { 
-	if (GetSize() == 16)
-	{
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
+	return GetSize() == 16;
 }
 
 int Graph::GetSize() 
@@ -222,7 +208,7 @@ void Graph::changeData(commands com)
 	{
 		graph.Add(com.data[i]);
 	}
-	for (int i = 0; i < com.size; i++)
+	for (int i = 0; i < com.size2; i++)
 	{
 		vertex.Add(com.data2[i]);
 	}

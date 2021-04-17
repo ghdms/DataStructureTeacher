@@ -40,26 +40,12 @@ _flag Stack::Clear()
 
 BOOL Stack::IsEmpty() 
 { 
-	if(GetSize())
-	{
-		return FALSE;
-	}
-	else
-	{
-		return TRUE;
-	}
+	return GetSize() == 0;
 }
 
 BOOL Stack::IsFull() 
 { 
-	if (GetSize() == 30)
-	{
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
+	return GetSize() == 30;
 }
 
 int Stack::GetSize() 

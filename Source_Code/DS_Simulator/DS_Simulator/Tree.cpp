@@ -79,7 +79,7 @@ void Tree::MinHeapUp(int nodeIndex, CArray<CString, CString&>& data)
 			if (HeapWait)
 			{
 				pDlg->Invalidate(FALSE);
-				Wait(2000);
+				Wait(1000);
 			}
 			tmp = data[parentIndex];
 			data[parentIndex] = data[nodeIndex];
@@ -90,6 +90,168 @@ void Tree::MinHeapUp(int nodeIndex, CArray<CString, CString&>& data)
 				Wait(500);
 			}
 			MinHeapUp(parentIndex, data);
+		}
+	}
+	sort1 = 300;
+	sort2 = 300; //박스 표시 없애기 위해 최대 사이즈 초과 값으로 설정
+}
+
+void Tree::MaxHeapDown(int nodeIndex, CArray<CString, CString&>& data)
+{
+	int leftChildIndex;
+	int rightChildIndex;
+	CString tmp;
+	CString nul = CString("NULL");
+	if (nodeIndex < GetSize())
+	{
+		leftChildIndex = nodeIndex * 2 + 1;
+		rightChildIndex = nodeIndex * 2 + 2;
+		if (leftChildIndex >= MAX_SIZE)
+		{
+			sort1 = 300;
+			sort2 = 300;
+			return;
+		}
+		if (data[leftChildIndex] == nul && data[rightChildIndex] == nul)
+		{
+			sort1 = 300;
+			sort2 = 300;
+			return;
+		}
+		if (data[leftChildIndex] != nul && data[rightChildIndex] != nul)
+		{
+			if (cmp(data[nodeIndex], data[leftChildIndex]) && cmp(data[nodeIndex], data[rightChildIndex]))
+			{
+				sort1 = 300;
+				sort2 = 300;
+				return;
+			}
+
+			sort1 = nodeIndex;
+			if (cmp(data[leftChildIndex], data[rightChildIndex]))
+			{
+				sort2 = leftChildIndex;
+			}
+			else
+			{
+				sort2 = rightChildIndex;
+			}
+			if (HeapWait)
+			{
+				pDlg->Invalidate(FALSE);
+				Wait(1000);
+			}
+			tmp = data[nodeIndex];
+			data[nodeIndex] = data[sort2];
+			data[sort2] = tmp; //swap
+			if (HeapWait)
+			{
+				pDlg->Invalidate(FALSE);
+				Wait(500);
+			}
+			MaxHeapDown(sort2, data);
+			return;
+		}
+		else if (!cmp(data[nodeIndex], data[leftChildIndex]))
+		{
+			sort1 = nodeIndex;
+			sort2 = leftChildIndex;
+			if (HeapWait)
+			{
+				pDlg->Invalidate(FALSE);
+				Wait(1000);
+			}
+			tmp = data[nodeIndex];
+			data[nodeIndex] = data[leftChildIndex];
+			data[leftChildIndex] = tmp; //swap
+			if (HeapWait)
+			{
+				pDlg->Invalidate(FALSE);
+				Wait(500);
+			}
+			MaxHeapDown(leftChildIndex, data);
+			return;
+		}
+	}
+	sort1 = 300;
+	sort2 = 300; //박스 표시 없애기 위해 최대 사이즈 초과 값으로 설정
+}
+
+void Tree::MinHeapDown(int nodeIndex, CArray<CString, CString&>& data)
+{
+	int leftChildIndex;
+	int rightChildIndex;
+	CString tmp;
+	CString nul = CString("NULL");
+	if (nodeIndex < GetSize())
+	{
+		leftChildIndex = nodeIndex * 2 + 1;
+		rightChildIndex = nodeIndex * 2 + 2;
+		if (leftChildIndex >= MAX_SIZE)
+		{
+			sort1 = 300;
+			sort2 = 300;
+			return;
+		}
+		if (data[leftChildIndex] == nul && data[rightChildIndex] == nul)
+		{
+			sort1 = 300;
+			sort2 = 300;
+			return;
+		}
+		if (data[leftChildIndex] != nul && data[rightChildIndex] != nul)
+		{
+			if (!cmp(data[nodeIndex], data[leftChildIndex]) && !cmp(data[nodeIndex], data[rightChildIndex]))
+			{
+				sort1 = 300;
+				sort2 = 300;
+				return;
+			}
+
+			sort1 = nodeIndex;
+			if (!cmp(data[leftChildIndex], data[rightChildIndex]))
+			{
+				sort2 = leftChildIndex;
+			}
+			else
+			{
+				sort2 = rightChildIndex;
+			}
+			if (HeapWait)
+			{
+				pDlg->Invalidate(FALSE);
+				Wait(1000);
+			}
+			tmp = data[nodeIndex];
+			data[nodeIndex] = data[sort2];
+			data[sort2] = tmp; //swap
+			if (HeapWait)
+			{
+				pDlg->Invalidate(FALSE);
+				Wait(500);
+			}
+			MinHeapDown(sort2, data);
+			return;
+		}
+		else if (cmp(data[nodeIndex], data[leftChildIndex]))
+		{
+			sort1 = nodeIndex;
+			sort2 = leftChildIndex;
+			if (HeapWait)
+			{
+				pDlg->Invalidate(FALSE);
+				Wait(1000);
+			}
+			tmp = data[nodeIndex];
+			data[nodeIndex] = data[leftChildIndex];
+			data[leftChildIndex] = tmp; //swap
+			if (HeapWait)
+			{
+				pDlg->Invalidate(FALSE);
+				Wait(500);
+			}
+			MinHeapDown(leftChildIndex, data);
+			return;
 		}
 	}
 	sort1 = 300;
@@ -138,111 +300,151 @@ _flag Tree::toBST()
 
 _flag Tree::Insert(CString data)
 {
-	CString nul = CString("NULL");
-
-	if (!IsFull())
-	{
-		if (data == "") //빈칸 제외
-		{
-			return INVALID;
-		}
-		if (!isNumeric(data)) //숫자 아닐 시 (힙에서 소팅 기능을 제공하기 때문에 int만)
-		{
-			return INVALID;
-		}
-		if (isExist(data)) //중복 검사
-		{
-			return ALREADYEXIST;
-		}
-		
-		if (max) //지금 맥스힙인 경우(맥스힙버튼을 누른 후인 경우)
-		{
-			if (size == MAX_SIZE)
-			{
-				return FULL;
-			}
-			else 
-			{
-				size++;
-				tree[size - 1] = data;
-				MaxHeapUp(size - 1, tree);
-				return SUCCESS;
-			}
-		}
-		else if (min) //지금 민힙인 경우(민힙버튼을 누른 후인 경우)
-		{
-			if (size == MAX_SIZE)
-			{
-				return FULL;
-			}
-			else 
-			{
-				size++;
-				tree[size - 1] = data;
-				MinHeapUp(size - 1, tree);
-				return SUCCESS;
-			}
-		}
-		else //Binary Search Tree 인 경우
-		{
-			int index = 0;
-			while (index < MAX_SIZE)
-			{
-				if (tree[index] == nul)
-				{
-					tree[index] = data;
-					size++;
-					return SUCCESS;
-				}
-				if (cmp(data,tree[index])) //data > tree[index]
-				{
-					index++;
-					index *= 2;
-				} 
-				else //data < tree[index]
-				{
-					index *= 2;
-					index++;
-				}
-			}
-			return NOSPACE;
-		}
-	}
-	else
+	if (IsFull())
 	{
 		return FULL;
 	}
-}
-_flag Tree::Delete(CString data)
-{
-	/*	if (!IsEmpty())
+	if (data == "") //빈칸 제외
 	{
-		for (int i = 0; i < GetSize(); i++)
-		{
+		return INVALID;
+	}
+	if (!isNumeric(data)) //숫자 아닐 시 (힙에서 소팅 기능을 제공하기 때문에 int만)
+	{
+		return INVALID;
+	}
+	if (isExist(data)) //중복 검사
+	{
+		return ALREADYEXIST;
+	}
 
-			if (data == tree[i])
+	CString nul = CString("NULL");
+	if (max) //지금 맥스힙인 경우(맥스힙버튼을 누른 후인 경우)
+	{
+		size++;
+		tree[size - 1] = data;
+		MaxHeapUp(size - 1, tree);
+		return SUCCESS;
+	}
+	else if (min) //지금 민힙인 경우(민힙버튼을 누른 후인 경우)
+	{
+		size++;
+		tree[size - 1] = data;
+		MinHeapUp(size - 1, tree);
+		return SUCCESS;
+	}
+	else //Binary Search Tree 인 경우
+	{
+		int index = 0;
+		while (index < MAX_SIZE)
+		{
+			if (tree[index] == nul)
 			{
-				tree[i] = tree[GetSize() - 1];
-				tree.RemoveAt(GetSize() - 1);
-				if (max)
-				{
-					MaxHeapDown(i, GetSize() - 1, tree);
-				}
-				else if (min)
-				{
-					MinHeapDown(i, GetSize() - 1, tree);
-				}
+				tree[index] = data;
+				size++;
 				return SUCCESS;
 			}
+			if (cmp(data,tree[index])) //data > tree[index]
+			{
+				index++;
+				index *= 2;
+			} 
+			else //data < tree[index]
+			{
+				index *= 2;
+				index++;
+			}
 		}
-		return NOTARGET;
+		return NOSPACE;
 	}
-	else
+}
+
+void Tree::afterDelete(int parentIndex, int originLeftIndex, int originRightIndex)
+{
+	if (originLeftIndex >= MAX_SIZE) {
+		return;
+	}
+	CString nul = CString("NULL");
+	if (tree[originLeftIndex] != nul) {
+		tree[parentIndex * 2 + 1] = tree[originLeftIndex];
+		tree[originLeftIndex] = nul;
+		afterDelete(parentIndex * 2 + 1, originLeftIndex * 2 + 1, originLeftIndex * 2 + 2);
+	}
+	if (tree[originRightIndex] != nul) {
+		tree[parentIndex * 2 + 2] = tree[originRightIndex];
+		tree[originRightIndex] = nul;
+		afterDelete(parentIndex * 2 + 2, originRightIndex * 2 + 1, originRightIndex * 2 + 2);
+	}
+}
+
+_flag Tree::Delete(CString data)
+{
+	if (IsEmpty())
 	{
 		return EMPTY;
 	}
-	*/
-	return INVALID;
+
+	CString nul = CString("NULL");
+	for (int i = MAX_SIZE - 1; i >= 0; i--)
+	{
+		if (data == tree[i])
+		{
+			if (!max && !min)
+			{
+				int leftChildIndex = i * 2 + 1;
+				int rightChildIndex = i * 2 + 2;
+				if (leftChildIndex >= MAX_SIZE || (tree[leftChildIndex] == nul && tree[rightChildIndex] == nul))
+				{
+					tree[i] = nul;
+					size--;
+				}
+				else if (tree[leftChildIndex] != nul && tree[rightChildIndex] != nul)
+				{
+					//min of rights or max of lefts
+					int targetIdx = rightChildIndex;
+					while (2 * targetIdx + 1 < MAX_SIZE && tree[2 * targetIdx + 1] != nul) {
+						targetIdx = 2 * targetIdx + 1;
+					}
+					tree[i] = tree[targetIdx];
+					Delete(tree[targetIdx]);
+				}
+				else if (tree[leftChildIndex] == nul)
+				{
+					//jump
+					tree[i] = tree[rightChildIndex];
+					tree[rightChildIndex] = nul;
+					afterDelete(i, rightChildIndex * 2 + 1, rightChildIndex * 2 + 2);
+					size--;
+				}
+				else if (tree[rightChildIndex] == nul)
+				{
+					//jump
+					tree[i] = tree[leftChildIndex];
+					tree[leftChildIndex] = nul;
+					afterDelete(i, leftChildIndex * 2 + 1, leftChildIndex * 2 + 2);
+					size--;
+				}
+				return SUCCESS;
+			}
+
+			tree[i] = tree[GetSize() - 1];
+			tree[GetSize() - 1] = nul;
+			size--;
+			if (tree[i] != nul) {
+				if (max)
+				{
+					MaxHeapDown(i, tree);
+					MaxHeapUp(i, tree);
+				}
+				else if (min)
+				{
+					MinHeapDown(i, tree);
+					MinHeapUp(i, tree);
+				}
+			}
+			return SUCCESS;
+		}
+	}
+	return NOTARGET;
 }
 
 _flag Tree::Clear()
@@ -258,26 +460,12 @@ _flag Tree::Clear()
 
 BOOL Tree::IsEmpty()
 {
-	if (size)
-	{
-		return FALSE;
-	}
-	else
-	{
-		return TRUE;
-	}
+	return size == 0;
 }
 
 BOOL Tree::IsFull()
 {
-	if (size == MAX_SIZE)
-	{
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
+	return size == MAX_SIZE;
 }
 
 int Tree::GetSize()
@@ -334,7 +522,7 @@ _flag Tree::MakeMaxheap() //맥스힙으로 변환
 	}
 	return SUCCESS; 
 }
-//
+
 _flag Tree::MakeMinheap() //민힙으로 변환
 {
 	CArray<CString, CString&> temp; //임시 민힙
@@ -384,6 +572,7 @@ commands Tree::getData()
 	
 	return a;
 }
+
 void Tree::changeData(commands com)
 {
 	tree.RemoveAll();

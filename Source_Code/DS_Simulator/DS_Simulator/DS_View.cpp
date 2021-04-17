@@ -97,7 +97,7 @@ void DSView::makeButton()
 		m_PictureCtrl.SetBitmap((HBITMAP)bit);
 		bit.Detach();
 		
-		bcount = 5;
+		bcount = 6;
 		data = new Tree();
 
 		showbutton(&button_undo);
@@ -105,6 +105,7 @@ void DSView::makeButton()
 		//showbutton(&button_fun3,CString("To BST"));
 		showbutton(&button_fun2, CString("Min Heap"));
 		showbutton(&button_fun1, CString("Max Heap"));
+		showbutton(&button_delete);
 		showbutton(&button_insert);
 		break;
 

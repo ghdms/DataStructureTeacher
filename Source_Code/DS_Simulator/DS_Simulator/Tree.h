@@ -16,9 +16,9 @@ public :
 	virtual _flag Clear();
 
 	void MaxHeapUp(int nodeIndex, CArray<CString, CString&>& data);
-	//void MaxHeapDown(int nodeIndex);
+	void MaxHeapDown(int nodeIndex, CArray<CString, CString&>& data);
 	void MinHeapUp(int nodeIndex, CArray<CString, CString&>& data);
-	//void MinHeapDown(int nodeIndex);
+	void MinHeapDown(int nodeIndex, CArray<CString, CString&>& data);
 	
 	_flag toBST();
 	_flag MakeMaxheap(); //¸Æ½ºÈü¹öÆ° ´©¸£¸é È£Ãâ. ¸Æ½ºÈüÀ¸·Î º¯È¯
@@ -34,4 +34,6 @@ public :
 	virtual void print(CRect * Box, CString recent);
 	virtual commands getData();
 	virtual void changeData(commands com);
+
+	void afterDelete(int parentIndex, int originLeftIndex, int originRightIndex);
 };

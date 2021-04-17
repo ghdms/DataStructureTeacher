@@ -1,15 +1,7 @@
-﻿  stdafx.cpp
-  DS_Input.cpp
-  DS_Input2.cpp
-  DS_View.cpp
-  DS_Simulator.cpp
-  DS_SimulatorDlg.cpp
-  Graph.cpp
-  List.cpp
-  Queue.cpp
-  Stack.cpp
-  Tree.cpp
+﻿  Tree.cpp
   코드를 생성하고 있습니다.
-  All 429 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  1 of 432 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    28 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   DS_Simulator.vcxproj -> C:\Users\ghdms\OneDrive\바탕 화면\2015-2\Windows프로그래밍\이호은유영빈\Source_Code\DS_Simulator\x64\Release\DS_Simulator.exe

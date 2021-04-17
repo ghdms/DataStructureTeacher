@@ -38,26 +38,12 @@ _flag Queue::Clear()
 }
 BOOL Queue::IsEmpty()
 {
-	if (GetSize())
-	{
-		return FALSE;
-	}
-	else
-	{
-		return TRUE;
-	}
+	return GetSize() == 0;
 }
 
 BOOL Queue::IsFull()
 {
-	if (GetSize() == 30)
-	{
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
+	return GetSize() == 30;
 }
 
 int Queue::GetSize()
@@ -106,7 +92,6 @@ commands Queue::getData()
 	POSITION pos = queue.GetHeadPosition();
 	for (int i = 0; i < queue.GetSize(); i++)
 	{
-		
 		a.data[i]= queue.GetNext(pos);
 		a.size++;
 	}
